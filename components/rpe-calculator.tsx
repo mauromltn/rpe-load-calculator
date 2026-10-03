@@ -19,12 +19,12 @@ function PanelHeader({ title, eyebrow }: { title: string; eyebrow: string }) {
 
 export function RpeCalculator() {
   const [unit, setUnit] = useState<'kg' | 'lb'>('kg')
-  const [haveWeight, setHaveWeight] = useState<number | ''>('')
-  const [haveReps, setHaveReps] = useState<number | ''>('')
-  const [haveRpe, setHaveRpe] = useState<number | ''>('')
+  const [haveWeight, setHaveWeight] = useState<number | ''>(100)
+  const [haveReps, setHaveReps] = useState<number | ''>(5)
+  const [haveRpe, setHaveRpe] = useState<number | ''>(6)
   const [wantReps, setWantReps] = useState(3)
   const [wantRpe, setWantRpe] = useState(9)
-  const [trainingMax, setTrainingMax] = useState(100)
+  const [trainingMax, setTrainingMax] = useState<number | ''>('')
   const [trainingPercentage, setTrainingPercentage] = useState(70)
 
   const oneRepMax = useMemo(() => estimatedOneRepMax(Number(haveWeight), Number(haveReps), Number(haveRpe)), [haveWeight, haveReps, haveRpe])
