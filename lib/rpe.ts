@@ -17,12 +17,12 @@ export function percentage(reps: number, rpe: number): number {
 }
 
 export function estimatedOneRepMax(weight: number, reps: number, rpe: number): number {
-  const percent = percentage(reps, rpe)
-  return percent > 0 ? (weight / percent) * 100 : 0
+  const pct = percentage(reps, rpe)
+  return weight > 0 && pct > 0 ? (weight / pct) * 100 : 0
 }
 
 export function targetWeight(oneRepMax: number, reps: number, rpe: number): number {
-  return (oneRepMax / 100) * percentage(reps, rpe)
+  return oneRepMax > 0 ? (oneRepMax / 100) * percentage(reps, rpe) : 0
 }
 
 export function isValidInput(weight: number, reps: number, rpe: number): boolean {
@@ -33,22 +33,9 @@ export function roundToIncrement(value: number, increment: number): number {
   return Math.round(value / increment) * increment
 }
 
-export function formatNumber(value: number): string {
-  return value.toFixed(1)
+export function formatPercent(value: number): string {
+  return `${value.toFixed(1)}%`
 }
 
-export function rpeLabel(rpe: number): string {
-  return Number.isInteger(rpe) ? String(rpe) : rpe.toFixed(1)
-}
-
-export const REFERENCE_RPES = [10, 9.5, 9, 8.5, 8, 7.5, 7, 6.5, 6]
-export const QUICK_PERCENTAGES = [
-  ...Array.from({ length: 13 }, (_, index) => 60 + index * 2.5),
-  95,
-  102.5,
-]
-export const REFERENCE_REPS = Array.from({ length: 10 }, (_, index) => index + 1)
-
-export function displayPercentage(value: number): string {
-  return String(Math.floor(value))
-}
+export const RPE_VALUES = [10, 9.5, 9, 8.5, 8, 7.5, 7, 6.5, 6]
+export const QUICK_PERCENTAGES = [...Array.from({ length: 13 }, (_, i) => 60 + i * 2.5), 95, 102.5]
