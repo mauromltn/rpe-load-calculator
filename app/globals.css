@@ -2,7 +2,7 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-:root { --bg:#100C0B; --text:#F4F7FB; --muted:#9A9290; --accent:#1683FF; --surface:#171413; --surface-2:#1D1918; --line:#2A2422; --line-soft:#211C1A; --accent-weak:rgba(22,131,255,.14); }
+:root { --bg:#080B12; --text:#F4F7FB; --muted:#8993A5; --accent:#1683FF; --surface:#0D111A; --surface-2:#111827; --line:#202938; --line-soft:#171F2D; --accent-weak:rgba(22,131,255,.14); }
 @theme inline { --color-background:var(--bg); --color-foreground:var(--text); --color-border:var(--line); --color-ring:var(--accent); }
 * { box-sizing:border-box; }
 html { background:var(--bg); }
