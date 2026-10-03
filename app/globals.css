@@ -6,7 +6,8 @@
 @theme inline { --color-background:var(--bg); --color-foreground:var(--text); --color-border:var(--line); --color-ring:var(--accent); }
 * { box-sizing:border-box; }
 html { background:var(--bg); }
-body { margin:0; background:var(--bg); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-geist), Arial, Helvetica, sans-serif; }
+h1,h2 { font-family:var(--font-thunder), Impact, 'Arial Narrow', Arial, sans-serif; font-weight:700; }
 button,input { font:inherit; }
 button { cursor:pointer; }
 button:disabled { cursor:not-allowed; opacity:.4; }
@@ -16,7 +17,7 @@ button:disabled { cursor:not-allowed; opacity:.4; }
 .kicker { display:flex; align-items:center; gap:12px; color:var(--muted); }
 .kicker span:first-child { color:var(--text); }.kicker i { width:22px; height:2px; background:var(--accent); display:block; }
 .hero-rule { height:1px; background:var(--line); margin:18px 0 34px; }
-h1,h2 { margin:0; font-family:'Arial Narrow',Arial,sans-serif; text-transform:uppercase; letter-spacing:-.055em; font-stretch:condensed; }
+h1,h2 { margin:0; text-transform:uppercase; letter-spacing:-.055em; font-stretch:condensed; }
 h1 { font-size:clamp(64px,11vw,142px); line-height:.8; font-weight:800; }
 h1 em { color:var(--muted); font-style:normal; }
 .tagline { color:var(--muted); margin:28px 0 0; font-size:14px; }

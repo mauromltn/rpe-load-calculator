@@ -1,6 +1,19 @@
 import { Analytics } from '@vercel/analytics/next'
+import { Geist } from 'next/font/google'
+import localFont from 'next/font/local'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+
+const geist = Geist({
+  variable: '--font-geist',
+  subsets: ['latin'],
+})
+
+const thunder = localFont({
+  src: '../public/fonts/Thunder-VF.ttf',
+  variable: '--font-thunder',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'RPE Load Calculator',
@@ -40,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className={`${geist.variable} ${thunder.variable} antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
