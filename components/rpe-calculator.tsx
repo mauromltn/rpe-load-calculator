@@ -5,7 +5,7 @@ import { estimatedOneRepMax, formatPercent, isValidInput, percentage, QUICK_PERC
 
 const mono = 'font-mono tabular-nums'
 
-function Field({ label, value, onChange, min, max, step = 1, suffix, help }: { label: string; value: number; onChange: (value: number) => void; min?: number; max?: number; step?: number; suffix?: string; help?: string }) {
+function Field({ label, value, onChange, min, max, step = 1, suffix, help }: { label: string; value: number | ''; onChange: (value: number) => void; min?: number; max?: number; step?: number; suffix?: string; help?: string }) {
   return <label className="field"><span className="field-label">{label}</span><span className="field-control"><input aria-label={label} type="number" inputMode="decimal" value={value} min={min} max={max} step={step} onChange={(e) => onChange(Number(e.target.value))} className={mono} />{suffix && <span className="suffix">{suffix}</span>}</span>{help && <span className="field-help">{help}</span>}</label>
 }
 
@@ -15,16 +15,16 @@ function PanelHeader({ title, eyebrow }: { title: string; eyebrow: string }) {
 
 export function RpeCalculator() {
   const [unit, setUnit] = useState<'kg' | 'lb'>('kg')
-  const [haveWeight, setHaveWeight] = useState(100)
-  const [haveReps, setHaveReps] = useState(5)
-  const [haveRpe, setHaveRpe] = useState(8)
+  const [haveWeight, setHaveWeight] = useState<number | ''>('')
+  const [haveReps, setHaveReps] = useState<number | ''>('')
+  const [haveRpe, setHaveRpe] = useState<number | ''>('')
   const [wantReps, setWantReps] = useState(3)
   const [wantRpe, setWantRpe] = useState(9)
   const [trainingMax, setTrainingMax] = useState(100)
   const [trainingPercentage, setTrainingPercentage] = useState(70)
 
-  const oneRepMax = useMemo(() => estimatedOneRepMax(haveWeight, haveReps, haveRpe), [haveWeight, haveReps, haveRpe])
-  const haveValid = isValidInput(haveWeight, haveReps, haveRpe)
+  const oneRepMax = useMemo(() => estimatedOneRepMax(Number(haveWeight), Number(haveReps), Number(haveRpe)), [haveWeight, haveReps, haveRpe])
+  const haveValid = haveWeight !== '' && haveReps !== '' && haveRpe !== '' && isValidInput(haveWeight, haveReps, haveRpe)
   const wantValid = wantReps > 0 && Number.isInteger(wantReps) && wantRpe > 0 && percentage(wantReps, wantRpe) > 0
   const wantWeight = wantValid && oneRepMax > 0 ? targetWeight(oneRepMax, wantReps, wantRpe) : 0
   const increment = unit === 'kg' ? 2.5 : 5
