@@ -22,15 +22,15 @@ export function RpeCalculator() {
   const [haveWeight, setHaveWeight] = useState<number | ''>('')
   const [haveReps, setHaveReps] = useState<number | ''>('')
   const [haveRpe, setHaveRpe] = useState<number | ''>('')
-  const [wantReps, setWantReps] = useState(3)
-  const [wantRpe, setWantRpe] = useState(9)
+  const [wantReps, setWantReps] = useState<number | ''>('')
+  const [wantRpe, setWantRpe] = useState<number | ''>('')
   const [trainingMax, setTrainingMax] = useState(100)
   const [trainingPercentage, setTrainingPercentage] = useState(70)
 
   const oneRepMax = useMemo(() => estimatedOneRepMax(Number(haveWeight), Number(haveReps), Number(haveRpe)), [haveWeight, haveReps, haveRpe])
   const haveValid = haveWeight !== '' && haveReps !== '' && haveRpe !== '' && isValidInput(haveWeight, haveReps, haveRpe)
-  const wantValid = wantReps > 0 && Number.isInteger(wantReps) && wantRpe > 0 && percentage(wantReps, wantRpe) > 0
-  const wantWeight = wantValid && oneRepMax > 0 ? targetWeight(oneRepMax, wantReps, wantRpe) : 0
+  const wantValid = wantReps !== '' && wantRpe !== '' && wantReps > 0 && Number.isInteger(wantReps) && wantRpe > 0 && percentage(wantReps, wantRpe) > 0
+  const wantWeight = wantValid && oneRepMax > 0 ? targetWeight(oneRepMax, Number(wantReps), Number(wantRpe)) : 0
   const increment = unit === 'kg' ? 2.5 : 5
   const setWeight = trainingMax > 0 && trainingPercentage > 0 ? trainingMax * trainingPercentage / 100 : 0
 
