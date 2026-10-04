@@ -13,8 +13,16 @@ function SettingsIcon() {
   return <svg className="settings-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.7 1.6h2.6l.4 1.7a5.4 5.4 0 0 1 1.2.7l1.7-.7 1.3 2.2-1.3 1.2c.1.4.1.8.1 1.3s0 .9-.1 1.3l1.3 1.2-1.3 2.2-1.7-.7a5.4 5.4 0 0 1-1.2.7l-.4 1.7H6.7l-.4-1.7a5.4 5.4 0 0 1-1.2-.7l-1.7.7-1.3-2.2 1.3-1.2a5.5 5.5 0 0 1-.1-1.3c0-.5 0-.9.1-1.3L2.1 5.5l1.3-2.2 1.7.7a5.4 5.4 0 0 1 1.2-.7l.4-1.7Z" /><circle cx="8" cy="8" r="2.1" /></svg>
 }
 
-function SettingsPanel({ language, setLanguage, unit, setUnit }: { language: 'rpe' | 'rir'; setLanguage: (language: 'rpe' | 'rir') => void; unit: 'kg' | 'lb'; setUnit: (unit: 'kg' | 'lb') => void }) {
-  return <aside className="settings-panel" aria-label="Calculator settings"><div className="settings-title"><span className="eyebrow">Preferences</span><strong>Settings</strong></div><div className="settings-option"><span>Effort language</span><div className="settings-toggle" role="group" aria-label="Effort language"><button className={language === 'rpe' ? 'active' : ''} onClick={() => setLanguage('rpe')}>RPE</button><button className={language === 'rir' ? 'active' : ''} onClick={() => setLanguage('rir')}>RIR</button></div></div><div className="settings-option"><span>Weight unit</span><div className="settings-toggle" role="group" aria-label="Weight unit"><button className={unit === 'kg' ? 'active' : ''} onClick={() => setUnit('kg')}>KG</button><button className={unit === 'lb' ? 'active' : ''} onClick={() => setUnit('lb')}>LB</button></div></div><div className="settings-legend"><span className="eyebrow">Legend</span><p><strong>RPE</strong> — Rate of Perceived Exertion</p><p><strong>RIR</strong> — Reps In Reserve</p><p><strong>1RM</strong> — One Rep Max</p></div></aside>
+type Locale = 'en' | 'it'
+
+const copy = {
+  en: { preferences: 'Preferences', settings: 'Settings', effort: 'Effort language', weight: 'Weight unit', language: 'Language', legend: 'Legend', rpe: 'Rate of Perceived Exertion', rir: 'Reps In Reserve', oneRm: 'One Rep Max', known: 'Known load', desired: 'Desired effort', training: 'Training max', weightLabel: 'Weight', reps: 'Reps', estimated: 'Estimated 1RM', target: 'Target weight', percentage: 'Percentage', setWeight: 'Set weight', exact: 'Exact', useEstimate: 'Use est. 1RM', map: 'The map', reference: '% of 1RM Reference', working: 'Working Loads', translate: 'Continuous translation', ofChart: "of Tuchscherer's chart" },
+  it: { preferences: 'Preferenze', settings: 'Impostazioni', effort: 'Linguaggio dello sforzo', weight: 'Unità di peso', language: 'Lingua', legend: 'Legenda', rpe: 'Percezione dello sforzo', rir: 'Ripetizioni in riserva', oneRm: 'Massimale di una ripetizione', known: 'Carico noto', desired: 'Sforzo desiderato', training: 'Massimale di allenamento', weightLabel: 'Peso', reps: 'Ripetizioni', estimated: '1RM stimato', target: 'Peso obiettivo', percentage: 'Percentuale', setWeight: 'Peso della serie', exact: 'Esatto', useEstimate: 'Usa 1RM stimato', map: 'La mappa', reference: '% di 1RM', working: 'Carichi di lavoro', translate: 'Traduzione continua', ofChart: 'della tabella di Tuchscherer' },
+} as const
+
+function SettingsPanel({ language, setLanguage, unit, setUnit, locale, setLocale }: { language: 'rpe' | 'rir'; setLanguage: (language: 'rpe' | 'rir') => void; unit: 'kg' | 'lb'; setUnit: (unit: 'kg' | 'lb') => void; locale: Locale; setLocale: (locale: Locale) => void }) {
+  const text = copy[locale]
+  return <aside className="settings-panel" aria-label={text.settings}><div className="settings-title"><span className="eyebrow">{text.preferences}</span><strong>{text.settings}</strong></div><div className="settings-option"><span>{text.effort}</span><div className="settings-toggle" role="group" aria-label={text.effort}><button className={language === 'rpe' ? 'active' : ''} onClick={() => setLanguage('rpe')}>RPE</button><button className={language === 'rir' ? 'active' : ''} onClick={() => setLanguage('rir')}>RIR</button></div></div><div className="settings-option"><span>{text.weight}</span><div className="settings-toggle" role="group" aria-label={text.weight}><button className={unit === 'kg' ? 'active' : ''} onClick={() => setUnit('kg')}>KG</button><button className={unit === 'lb' ? 'active' : ''} onClick={() => setUnit('lb')}>LB</button></div></div><div className="settings-option"><span>{text.language}</span><div className="settings-toggle" role="group" aria-label={text.language}><button className={locale === 'en' ? 'active' : ''} onClick={() => setLocale('en')}>EN</button><button className={locale === 'it' ? 'active' : ''} onClick={() => setLocale('it')}>IT</button></div></div><div className="settings-legend"><span className="eyebrow">{text.legend}</span><p><strong>RPE</strong> — {text.rpe}</p><p><strong>RIR</strong> — {text.rir}</p><p><strong>1RM</strong> — {text.oneRm}</p></div></aside>
 }
 
 function Field({ label, value, onChange, min, max, step = 1, suffix, help }: { label: string; value: number | ''; onChange: (value: number | '') => void; min?: number; max?: number; step?: number; suffix?: string; help?: string }) {
@@ -28,6 +36,7 @@ function PanelHeader({ title, eyebrow }: { title: string; eyebrow: string }) {
 export function RpeCalculator() {
   const [unit, setUnitState] = useState<'kg' | 'lb'>('kg')
   const [language, setLanguage] = useState<'rpe' | 'rir'>('rpe')
+  const [locale, setLocale] = useState<Locale>('en')
   const [settingsOpen, setSettingsOpen] = useState(false)
   const settingsRef = useRef<HTMLDivElement>(null)
   const [haveWeight, setHaveWeight] = useState<number | ''>('')
@@ -70,7 +79,7 @@ export function RpeCalculator() {
       <h1>RPE Load<br /><em>Calculator</em></h1>
       <p className="tagline">Translate effort into numbers you can load on the bar.</p>
       <button className="settings-button" aria-expanded={settingsOpen} aria-controls="calculator-settings" onClick={() => setSettingsOpen(!settingsOpen)}><SettingsIcon /> Settings</button>
-      {settingsOpen && <div id="calculator-settings" ref={settingsRef}><SettingsPanel language={language} setLanguage={setLanguage} unit={unit} setUnit={setUnit} /></div>}
+      {settingsOpen && <div id="calculator-settings" ref={settingsRef}><SettingsPanel language={language} setLanguage={setLanguage} unit={unit} setUnit={setUnit} locale={locale} setLocale={setLocale} /></div>}
     </header>
 
     <section className="tool-grid" aria-label="Load calculators">
