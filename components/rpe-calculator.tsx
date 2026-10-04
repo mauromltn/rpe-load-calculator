@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { estimatedOneRepMax, formatPercent, isValidInput, percentage, QUICK_PERCENTAGES, roundToIncrement, RPE_VALUES, targetWeight } from '@/lib/rpe'
 
 const mono = 'font-mono tabular-nums'
@@ -11,6 +11,10 @@ function ArrowUpRight() {
 
 function SettingsIcon() {
   return <svg className="settings-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.7 1.6h2.6l.4 1.7a5.4 5.4 0 0 1 1.2.7l1.7-.7 1.3 2.2-1.3 1.2c.1.4.1.8.1 1.3s0 .9-.1 1.3l1.3 1.2-1.3 2.2-1.7-.7a5.4 5.4 0 0 1-1.2.7l-.4 1.7H6.7l-.4-1.7a5.4 5.4 0 0 1-1.2-.7l-1.7.7-1.3-2.2 1.3-1.2a5.5 5.5 0 0 1-.1-1.3c0-.5 0-.9.1-1.3L2.1 5.5l1.3-2.2 1.7.7a5.4 5.4 0 0 1 1.2-.7l.4-1.7Z" /><circle cx="8" cy="8" r="2.1" /></svg>
+}
+
+function CloseIcon() {
+  return <svg className="close-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 3 10 10M13 3 3 13" /></svg>
 }
 
 type Locale = 'en' | 'it'
@@ -24,9 +28,9 @@ function t(locale: Locale, key: keyof typeof copy.en) {
   return copy[locale][key]
 }
 
-function SettingsPanel({ language, setLanguage, unit, setUnit, locale, setLocale }: { language: 'rpe' | 'rir'; setLanguage: (language: 'rpe' | 'rir') => void; unit: 'kg' | 'lb'; setUnit: (unit: 'kg' | 'lb') => void; locale: Locale; setLocale: (locale: Locale) => void }) {
+function SettingsPanel({ language, setLanguage, unit, setUnit, locale, setLocale, onClose }: { language: 'rpe' | 'rir'; setLanguage: (language: 'rpe' | 'rir') => void; unit: 'kg' | 'lb'; setUnit: (unit: 'kg' | 'lb') => void; locale: Locale; setLocale: (locale: Locale) => void; onClose: () => void }) {
   const text = copy[locale]
-  return <aside className="settings-panel" aria-label={text.settings}><div className="settings-title"><span className="eyebrow">{text.preferences}</span><strong>{text.settings}</strong></div><div className="settings-option"><span>{text.effort}</span><div className="settings-toggle" role="group" aria-label={text.effort}><button className={language === 'rpe' ? 'active' : ''} onClick={() => setLanguage('rpe')}>RPE</button><button className={language === 'rir' ? 'active' : ''} onClick={() => setLanguage('rir')}>RIR</button></div></div><div className="settings-option"><span>{text.weight}</span><div className="settings-toggle" role="group" aria-label={text.weight}><button className={unit === 'kg' ? 'active' : ''} onClick={() => setUnit('kg')}>KG</button><button className={unit === 'lb' ? 'active' : ''} onClick={() => setUnit('lb')}>LB</button></div></div><div className="settings-option"><span>{text.language}</span><div className="settings-toggle" role="group" aria-label={text.language}><button className={locale === 'en' ? 'active' : ''} onClick={() => setLocale('en')}>EN</button><button className={locale === 'it' ? 'active' : ''} onClick={() => setLocale('it')}>IT</button></div></div><div className="settings-legend"><span className="eyebrow">{text.legend}</span><p><strong>RPE</strong> — {text.rpe}</p><p><strong>RIR</strong> — {text.rir}</p><p><strong>1RM</strong> — {text.oneRm}</p></div></aside>
+  return <aside className="settings-panel" aria-label={text.settings}><div className="settings-title"><span className="eyebrow">{text.preferences}</span><strong>{text.settings}</strong><button type="button" className="settings-close" aria-label={locale === 'it' ? 'Chiudi impostazioni' : 'Close settings'} onClick={onClose}><CloseIcon /></button></div><div className="settings-option"><span>{text.effort}</span><div className="settings-toggle" role="group" aria-label={text.effort}><button className={language === 'rpe' ? 'active' : ''} onClick={() => setLanguage('rpe')}>RPE</button><button className={language === 'rir' ? 'active' : ''} onClick={() => setLanguage('rir')}>RIR</button></div></div><div className="settings-option"><span>{text.weight}</span><div className="settings-toggle" role="group" aria-label={text.weight}><button className={unit === 'kg' ? 'active' : ''} onClick={() => setUnit('kg')}>KG</button><button className={unit === 'lb' ? 'active' : ''} onClick={() => setUnit('lb')}>LB</button></div></div><div className="settings-option"><span>{text.language}</span><div className="settings-toggle" role="group" aria-label={text.language}><button className={locale === 'en' ? 'active' : ''} onClick={() => setLocale('en')}>EN</button><button className={locale === 'it' ? 'active' : ''} onClick={() => setLocale('it')}>IT</button></div></div><div className="settings-legend"><span className="eyebrow">{text.legend}</span><p><strong>RPE</strong> — {text.rpe}</p><p><strong>RIR</strong> — {text.rir}</p><p><strong>1RM</strong> — {text.oneRm}</p></div></aside>
 }
 
 function Field({ label, value, onChange, min, max, step = 1, suffix, help }: { label: string; value: number | ''; onChange: (value: number | '') => void; min?: number; max?: number; step?: number; suffix?: string; help?: string }) {
@@ -43,7 +47,6 @@ export function RpeCalculator() {
   const [locale, setLocale] = useState<Locale>('en')
   const text = copy[locale]
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const settingsRef = useRef<HTMLDivElement>(null)
   const [haveWeight, setHaveWeight] = useState<number | ''>('')
   const [haveReps, setHaveReps] = useState<number | ''>('')
   const [haveRpe, setHaveRpe] = useState<number | ''>('')
@@ -68,15 +71,6 @@ export function RpeCalculator() {
   const setUseOneRepMax = () => { if (haveValid) setTrainingMax(Number(oneRepMax.toFixed(1))) }
   const setQuickPercentage = (value: number) => setTrainingPercentage(value)
 
-  useEffect(() => {
-    if (!settingsOpen) return
-    const handlePointerDown = (event: PointerEvent) => {
-      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) setSettingsOpen(false)
-    }
-    document.addEventListener('pointerdown', handlePointerDown)
-    return () => document.removeEventListener('pointerdown', handlePointerDown)
-  }, [settingsOpen])
-
   return <main className="calculator-shell">
     <header className="hero">
       <div className="kicker"><span>{text.barbell}</span><i /> <span>{text.autoregulation}</span></div>
@@ -84,7 +78,7 @@ export function RpeCalculator() {
       <h1>RPE Load<br /><em>Calculator</em></h1>
       <p className="tagline">{text.tagline}</p>
       <button className="settings-button" aria-expanded={settingsOpen} aria-controls="calculator-settings" onClick={() => setSettingsOpen(!settingsOpen)}><SettingsIcon /> {text.settings}</button>
-      {settingsOpen && <div id="calculator-settings" ref={settingsRef}><SettingsPanel language={language} setLanguage={setLanguage} unit={unit} setUnit={setUnit} locale={locale} setLocale={setLocale} /></div>}
+      {settingsOpen && <div id="calculator-settings"><SettingsPanel language={language} setLanguage={setLanguage} unit={unit} setUnit={setUnit} locale={locale} setLocale={setLocale} onClose={() => setSettingsOpen(false)} /></div>}
     </header>
 
     <section className="tool-grid" aria-label={locale === 'it' ? 'Calcolatori di carico' : 'Load calculators'}>
