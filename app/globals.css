@@ -2,12 +2,12 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-:root { --bg:#080B12; --text:#F4F7FB; --muted:#8993A5; --accent:#1683FF; --surface:#111111; --surface-2:#191919; --line:#2A2A2A; --line-soft:#222222; --accent-weak:rgba(22,131,255,.14); }
+:root { --bg:#100C0B; --text:#FBFBFB; --muted:#878787; --accent:#1683FF; --surface:#111111; --surface-2:#191919; --line:#2A2A2A; --line-soft:#222222; --accent-weak:rgba(22,131,255,.14); }
 @theme inline { --color-background:var(--bg); --color-foreground:var(--text); --color-border:var(--line); --color-ring:var(--accent); }
 * { box-sizing:border-box; }
 html { background:var(--bg); }
 body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-geist), Arial, Helvetica, sans-serif; transition:background-color .2s ease,color .2s ease; }
-body:has(.calculator-shell[data-theme='light']), html:has(.calculator-shell[data-theme='light']) { --bg:#F2F4F7; --text:#111827; --muted:#667085; --accent:#012BBA; --surface:#FFFFFF; --surface-2:#E9EEF4; --line:#D5DCE5; --line-soft:#E7EBF0; --accent-weak:rgba(18,104,196,.12); }
+body:has(.calculator-shell[data-theme='light']), html:has(.calculator-shell[data-theme='light']) { --bg:#FBFBFB; --text:#100C0B; --muted:#667085; --accent:#012BBA; --surface:#FFFFFF; --surface-2:#E9EEF4; --line:#D5DCE5; --line-soft:#E7EBF0; --accent-weak:rgba(18,104,196,.12); }
 h1,h2 { font-family:var(--font-thunder), Impact, 'Arial Narrow', Arial, sans-serif; font-weight:300; font-variation-settings:'wght' 300; }
 button,input { font:inherit; }
 button { cursor:pointer; }
