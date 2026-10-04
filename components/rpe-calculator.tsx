@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { estimatedOneRepMax, formatPercent, isValidInput, percentage, QUICK_PERCENTAGES, roundToIncrement, RPE_VALUES, targetWeight } from '@/lib/rpe'
 
 const mono = 'font-mono tabular-nums'
@@ -29,6 +29,7 @@ export function RpeCalculator() {
   const [unit, setUnitState] = useState<'kg' | 'lb'>('kg')
   const [language, setLanguage] = useState<'rpe' | 'rir'>('rpe')
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const settingsRef = useRef<HTMLDivElement>(null)
   const [haveWeight, setHaveWeight] = useState<number | ''>('')
   const [haveReps, setHaveReps] = useState<number | ''>('')
   const [haveRpe, setHaveRpe] = useState<number | ''>('')
@@ -53,6 +54,15 @@ export function RpeCalculator() {
   const setUseOneRepMax = () => { if (haveValid) setTrainingMax(Number(oneRepMax.toFixed(1))) }
   const setQuickPercentage = (value: number) => setTrainingPercentage(value)
 
+  useEffect(() => {
+    if (!settingsOpen) return
+    const handlePointerDown = (event: PointerEvent) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) setSettingsOpen(false)
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [settingsOpen])
+
   return <main className="calculator-shell">
     <header className="hero">
       <div className="kicker"><span>Barbell Mathematics</span><i /> <span>Autoregulation</span></div>
@@ -60,7 +70,7 @@ export function RpeCalculator() {
       <h1>RPE Load<br /><em>Calculator</em></h1>
       <p className="tagline">Translate effort into numbers you can load on the bar.</p>
       <button className="settings-button" aria-expanded={settingsOpen} aria-controls="calculator-settings" onClick={() => setSettingsOpen(!settingsOpen)}><SettingsIcon /> Settings</button>
-      {settingsOpen && <div id="calculator-settings"><SettingsPanel language={language} setLanguage={setLanguage} unit={unit} setUnit={setUnit} /></div>}
+      {settingsOpen && <div id="calculator-settings" ref={settingsRef}><SettingsPanel language={language} setLanguage={setLanguage} unit={unit} setUnit={setUnit} /></div>}
     </header>
 
     <section className="tool-grid" aria-label="Load calculators">
